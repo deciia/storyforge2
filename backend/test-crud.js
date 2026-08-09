@@ -97,7 +97,7 @@ async function testTable(name, createBody) {
       // Health check
       const h = await fetch('GET', '/api/health');
       check('GET /api/health → 200', h.status === 200, `got ${h.status}`);
-      check('health reports 42 tables', h.body?.tables === 42, `got ${h.body?.tables}`);
+      check('health reports all tables', h.body?.tables === Object.keys(TABLES).length, `got ${h.body?.tables}`);
 
       // Core tables
       await testTable('projects', {
