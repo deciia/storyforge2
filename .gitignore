@@ -18,3 +18,16 @@ playwright-report/
 release/
 packaging/desktop-server/web/*
 !packaging/desktop-server/web/placeholder.txt
+
+# backend runtime artifacts (never commit)
+backend/node_modules/
+backend/*.db
+backend/*.db-shm
+backend/*.db-wal
+backend/*.db.bak_*
+backend/test_import.py
+backend/test_*.py
+backend/__pycache__/
+backend/*.pyc
+backend/*.log
+backend/*.err
