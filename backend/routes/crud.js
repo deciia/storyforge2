@@ -14,18 +14,6 @@ function createRouter(tableName) {
   const router = require('express').Router();
   const colNames = db.prepare(`SELECT * FROM "${tableName}" LIMIT 0`).columns().map(c => c.name);
 
-  const knownColumns = new Set([
-    'id', 'projectId', 'name', 'role', 'sortOrder', 'status', 'type',
-    'parentId', 'outlineNodeId', 'chapterId', 'sessionId', 'chunkIndex',
-    'referenceId', 'category', 'entityName', 'lastChapterId',
-    'fromCharacterId', 'toCharacterId', 'fromGroupId', 'toGroupId',
-    'characterId', 'locationId', 'codexEntryId', 'domain', 'worldGroupId',
-    'targetWorldGroupId', 'sourceChapterId', 'sourceOutlineNodeId',
-    'categoryId', 'itemName', 'scope', 'moduleKey', 'isActive', 'isDefault',
-    'fileHash', 'timestamp', 'pinned', 'era', 'year', 'level', 'predicate',
-    'createdAt', 'updatedAt', 'builtInKey'
-  ]);
-
   function parseRow(row) {
     if (!row) return null;
     const result = { ...row };
