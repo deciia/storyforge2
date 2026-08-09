@@ -84,10 +84,6 @@ const IMPORT_ORDER = [
   'agentConversations', 'agentEvents',
   'nodeFlows', 'nodeRuns',
   'simulationSessions', 'simulationEvents', 'simulationCheckpoints',
-  // ── P0 fix 2026-08-09: 对齐 Dexie 的 7 张缺失表 ──
-  'factions', 'itemSystems',
-  'masterWorks', 'masterChapterBeats', 'masterChunkAnalysis',
-  'masterStyleMetrics', 'masterInsights'
 ];
 
 /**
@@ -119,7 +115,6 @@ const FK_COLUMN_TABLE = {
   arcIdA: 'storyArcs',
   arcIdB: 'storyArcs',
   lastActiveChapterId: 'chapters',
-  workId: 'masterWorks',
 };
 
 /**

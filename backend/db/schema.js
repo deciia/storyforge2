@@ -516,66 +516,6 @@ const TABLES = {
     'createdAt INTEGER NOT NULL',
     'updatedAt INTEGER NOT NULL',
   ],
-  // ── 对齐 Dexie 的 7 张缺失表（2026-08-09 P0 fix）──
-  factions: [
-    'id INTEGER PRIMARY KEY AUTOINCREMENT',
-    'projectId INTEGER NOT NULL',
-    'name TEXT NOT NULL DEFAULT ""',
-    'data TEXT NOT NULL DEFAULT "{}"',
-    'createdAt INTEGER NOT NULL',
-    'updatedAt INTEGER NOT NULL',
-  ],
-  itemSystems: [
-    'id INTEGER PRIMARY KEY AUTOINCREMENT',
-    'projectId INTEGER NOT NULL',
-    'data TEXT NOT NULL DEFAULT "{}"',
-    'createdAt INTEGER NOT NULL',
-    'updatedAt INTEGER NOT NULL',
-  ],
-  masterWorks: [
-    'id INTEGER PRIMARY KEY AUTOINCREMENT',
-    'projectId INTEGER DEFAULT NULL',
-    'genre TEXT DEFAULT NULL',
-    'status TEXT DEFAULT NULL',
-    'data TEXT NOT NULL DEFAULT "{}"',
-    'createdAt INTEGER NOT NULL',
-    'updatedAt INTEGER NOT NULL',
-  ],
-  masterChapterBeats: [
-    'id INTEGER PRIMARY KEY AUTOINCREMENT',
-    'projectId INTEGER DEFAULT NULL',
-    'workId INTEGER DEFAULT NULL',
-    'chapterIndex INTEGER DEFAULT NULL',
-    'type TEXT DEFAULT NULL',
-    'data TEXT NOT NULL DEFAULT "{}"',
-    'createdAt INTEGER NOT NULL',
-    'updatedAt INTEGER NOT NULL',
-  ],
-  masterChunkAnalysis: [
-    'id INTEGER PRIMARY KEY AUTOINCREMENT',
-    'projectId INTEGER DEFAULT NULL',
-    'workId INTEGER DEFAULT NULL',
-    'chunkIndex INTEGER DEFAULT NULL',
-    'data TEXT NOT NULL DEFAULT "{}"',
-    'createdAt INTEGER NOT NULL',
-    'updatedAt INTEGER NOT NULL',
-  ],
-  masterStyleMetrics: [
-    'id INTEGER PRIMARY KEY AUTOINCREMENT',
-    'projectId INTEGER DEFAULT NULL',
-    'workId INTEGER DEFAULT NULL',
-    'data TEXT NOT NULL DEFAULT "{}"',
-    'createdAt INTEGER NOT NULL',
-    'updatedAt INTEGER NOT NULL',
-  ],
-  masterInsights: [
-    'id INTEGER PRIMARY KEY AUTOINCREMENT',
-    'projectId INTEGER DEFAULT NULL',
-    'genre TEXT DEFAULT NULL',
-    'data TEXT NOT NULL DEFAULT "{}"',
-    'createdAt INTEGER NOT NULL',
-    'updatedAt INTEGER NOT NULL',
-  ],
 };
 
 function initDb() {
@@ -591,6 +531,17 @@ function initDb() {
   for (const [tableName, columns] of Object.entries(TABLES)) {
     const sql = `CREATE TABLE IF NOT EXISTS "${tableName}" (\n  ${columns.join(',\n  ')}\n)`;
     db.exec(sql);
+  }
+
+  // 2026-08-09 P2: 清理上游已废弃表（Dexie v29/v31+ 置 null 删除后不再创建）。
+  // factions/itemSystems(v29 词条化)、master*(v31+ 作品分析表) 均为空表，DROP 幂等安全。
+  const DROPPED_TABLES = [
+    'factions', 'itemSystems',
+    'masterWorks', 'masterChapterBeats', 'masterChunkAnalysis',
+    'masterStyleMetrics', 'masterInsights',
+  ];
+  for (const t of DROPPED_TABLES) {
+    db.exec(`DROP TABLE IF EXISTS "${t}"`);
   }
 
   return db;
